@@ -1,0 +1,60 @@
+﻿@model List<webdev.Models.LinkInformation>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .button1 {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+        }
+
+            .button1:hover {
+                background-color: #4CAF50;
+                color: white;
+            }
+    </style>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Create", "Link", FormMethod.Post))
+        {
+            <input type="text" name="link" placeholder="Original Link" /> <br />
+            <button class="button button1">Add</button>
+        }
+    </div>
+    <div id="div1"></div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Original Link:</th>
+                    <th>New Link:</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td bgcolor="bisque">@item.OriginalLink</td>
+                        <td bgcolor="LemonChiffon"><a href="/@item.Hash">@item.Hash</a> </td>
+                        <td>
+                            @using (Html.BeginForm("Delete", "Link", FormMethod.Post))
+                            {
+                                <input type="hidden" name="link" placeholder="Original Link" value="@item.OriginalLink"/>
+                                <button class="button button1 btn-danger" type="submit">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
