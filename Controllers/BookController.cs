@@ -24,6 +24,7 @@ namespace webdev.Controllers
         [HttpPost]
         public IActionResult Create(Book book)
         {
+            //komentarz
             _repository.AddBook(book);
             return Redirect("Index");
         }
