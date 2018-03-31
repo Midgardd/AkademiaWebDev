@@ -17,16 +17,15 @@ namespace webdev.Controllers
             _repository = linksRepository;
         }
 
-        [HttpGet("/{hash}")]
-        public void RedirectLink(string hash)
+        [HttpGet("/api/{hash}")]
+        public IActionResult RedirectLink(string hash)
         {
             var links = _repository.GetLinks();
             foreach (LinkInformation x in links)
             {
                 if(x.Hash == hash)
                 {
-                    Response.Redirect(x.OriginalLink);
-                    return;
+                    return Ok(x.OriginalLink);
                 }
             }
 

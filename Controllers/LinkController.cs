@@ -21,30 +21,31 @@ namespace webdev.Controllers
             _hashAlgorithm = hashAlgorithm;
         }
 
-        [HttpGet]
+        [HttpGet("/api/links")]
         public IActionResult Index()
         {
             var links = _repository.GetLinks();
-            return View(links);
+            return Ok(links);
         }
 
-        [HttpPost]
-        public IActionResult Delete(string link)
+        [HttpDelete("/api/links")]
+        public IActionResult Delete([FromBody]string link)
         {
             _repository.Delete(link);
-            return Redirect("Index");
+            return Ok();
         }
 
-        [HttpPost]
-        public IActionResult Create(string link)
+        [HttpPost("/api/links")]
+        public IActionResult Create([FromBody]string link)
         {
             LinkInformation linkInformation = new LinkInformation { OriginalLink = link };
             _repository.Add(linkInformation);
             //uzupełniony Id
+            
             string hash = _hashAlgorithm.Hash(linkInformation.Id);
             linkInformation.Hash = hash;
             _repository.Update(linkInformation);
-            return Redirect("Index");
+            return Redirect("/api/links");
         }
     }
 }
