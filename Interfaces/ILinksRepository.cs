@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using webdev.Models;
 
 namespace webdev.Interfaces
 {
     public interface ILinksRepository
     {
-        List<LinkInformation> GetLinks();
-        void Add(LinkInformation information);
-        void Update(LinkInformation information);
-        void Delete(String originalLink);
+        IEnumerable<Link> GetLinks(string search,int pageNumber,int pageSize);
+        void Add(Link information);
+        void Delete(String hash);
+        void Update(Link link);
+        int LinksCount(string search);
+        Link GetLinkByHash(string hash);
     }
 }

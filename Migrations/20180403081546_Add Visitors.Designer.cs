@@ -11,9 +11,10 @@ using webdev;
 namespace webdev.Migrations
 {
     [DbContext(typeof(LinkDbContext))]
-    partial class LinkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180403081546_Add Visitors")]
+    partial class AddVisitors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

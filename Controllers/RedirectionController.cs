@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using webdev.Interfaces;
 using webdev.Models;
 
@@ -20,16 +17,26 @@ namespace webdev.Controllers
         [HttpGet("/api/{hash}")]
         public IActionResult RedirectLink(string hash)
         {
-            var links = _repository.GetLinks();
-            foreach (LinkInformation x in links)
+            Link linkToRedirect = _repository.GetLinkByHash(hash);
+            
+            if (!(Request.Cookies[hash] is null))
             {
-                if(x.Hash == hash)
-                {
-                    return Ok(x.OriginalLink);
-                }
+                return Redirect(linkToRedirect.OriginalLink);
             }
 
-            throw new Exception();
+            linkToRedirect.Visitors += 1;
+            _repository.Update(linkToRedirect);
+
+            AddCookie(hash);
+
+            return Redirect(linkToRedirect.OriginalLink);
+        }
+
+        private void AddCookie(string hash)
+        {
+            Microsoft.AspNetCore.Http.CookieOptions cookieOptions = new Microsoft.AspNetCore.Http.CookieOptions();
+            cookieOptions.Expires = DateTime.Now.AddDays(5);
+            Response.Cookies.Append(hash, hash, cookieOptions);
         }
     }
 }

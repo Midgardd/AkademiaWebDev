@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using webdev.Helpers;
 using webdev.Interfaces;
 using webdev.Models;
-using webdev.Repository;
 
 namespace webdev.Controllers
 {
@@ -22,30 +20,45 @@ namespace webdev.Controllers
         }
 
         [HttpGet("/api/links")]
-        public IActionResult Index()
+        public IActionResult Get([FromQuery]LinkRequest request)
         {
-            var links = _repository.GetLinks();
-            return Ok(links);
+            int requestedPage = request.Page ?? 1;
+            int requestedPageSize = request.PageSize ?? 10;
+            string search = request.Search ?? "";
+
+            IEnumerable<Link> links = _repository.GetLinks(search,requestedPage,requestedPageSize);
+
+            int linksCountMatchedSearch = _repository.LinksCount(search);
+            int maxPage = (linksCountMatchedSearch / requestedPageSize) + 1;
+
+            IEnumerable<LinkGetResult.SendedLinkToClient> linkInformations = links.Select(x => new LinkGetResult.SendedLinkToClient(x));
+            LinkGetResult result = new LinkGetResult(linkInformations, new LinkGetResult.PageInfo(requestedPage, maxPage));
+
+            return Ok(result);
         }
 
         [HttpDelete("/api/links")]
-        public IActionResult Delete([FromBody]string link)
+        public IActionResult Delete([FromBody]string hash)
         {
-            _repository.Delete(link);
+            _repository.Delete(hash);
             return Ok();
         }
 
         [HttpPost("/api/links")]
         public IActionResult Create([FromBody]string link)
         {
-            LinkInformation linkInformation = new LinkInformation { OriginalLink = link };
+            if(!(link.IsValidHttpLink() || link.IsValidHttpsLink()))
+            {
+                return BadRequest();
+            }
+        
+            Link linkInformation = new Link { OriginalLink = link , Visitors=0};
             _repository.Add(linkInformation);
-            //uzupełniony Id
-            
-            string hash = _hashAlgorithm.Hash(linkInformation.Id);
-            linkInformation.Hash = hash;
+
+            linkInformation.Hash = _hashAlgorithm.Hash(linkInformation.Id);
             _repository.Update(linkInformation);
-            return Redirect("/api/links");
+
+            return Ok();
         }
     }
 }
