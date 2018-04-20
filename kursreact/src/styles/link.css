@@ -1,0 +1,30 @@
+.linkTable {
+  justify-content: center; }
+  .linkTable table {
+    border-collapse: collapse; }
+  .linkTable table, .linkTable th, .linkTable td {
+    border: 1px solid #dddddd; }
+  .linkTable thead {
+    background-color: #504C4D; }
+    .linkTable thead th {
+      color: white; }
+  .linkTable tbody tr {
+    height: auto; }
+    .linkTable tbody tr:nth-child(2n) {
+      background-color: #ffffff; }
+    .linkTable tbody tr:nth-child(2n + 1) {
+      background-color: #f9f9f9; }
+  .linkTable tbody td {
+    padding: 8px; }
+
+.tablePagination-wrapper {
+  justify-content: center;
+  align-items: center; }
+
+.tablePagination-next {
+  text-align: right; }
+
+.tablePagination-desc {
+  text-align: center; }
+  .tablePagination-desc p {
+    line-height: 38px; }

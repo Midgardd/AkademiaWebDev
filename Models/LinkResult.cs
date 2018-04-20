@@ -18,12 +18,12 @@ namespace webdev.Models
 
         public class PageInfo
         {
-            public int CurentPage { get; }
+            public int CurrentPage { get; }
             public int MaxPage { get; }
 
             public PageInfo(int curentPage, int maxPage)
             {
-                CurentPage = curentPage;
+                CurrentPage = curentPage;
                 MaxPage = maxPage;
             }
         }

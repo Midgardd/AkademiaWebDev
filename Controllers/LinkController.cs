@@ -29,7 +29,8 @@ namespace webdev.Controllers
             IEnumerable<Link> links = _repository.GetLinks(search,requestedPage,requestedPageSize);
 
             int linksCountMatchedSearch = _repository.LinksCount(search);
-            int maxPage = (linksCountMatchedSearch / requestedPageSize) + 1;
+            int maxPage = (linksCountMatchedSearch / requestedPageSize);
+            maxPage += linksCountMatchedSearch % requestedPageSize == 0 ? 0 : 1;
 
             IEnumerable<LinkGetResult.SendedLinkToClient> linkInformations = links.Select(x => new LinkGetResult.SendedLinkToClient(x));
             LinkGetResult result = new LinkGetResult(linkInformations, new LinkGetResult.PageInfo(requestedPage, maxPage));

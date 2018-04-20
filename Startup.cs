@@ -21,6 +21,7 @@ namespace webdev
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddMvc();
 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "URL Shortener API", Version = "v1" }));
@@ -33,6 +34,11 @@ namespace webdev
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
