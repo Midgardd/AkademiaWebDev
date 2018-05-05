@@ -37,6 +37,11 @@ namespace webdev.Repository
                 .Take(pageSize);
         }
 
+        public Link GetLink(string hash)
+        {
+            return DbContext.Links.FirstOrDefault(x => x.Hash == hash);
+        }
+
         public int LinksCount(string search)
         {
             search = search.ToLower();
@@ -54,7 +59,7 @@ namespace webdev.Repository
 
         public Link GetLinkByHash(string hash)
         {
-            return DbContext.Links.First(x => x.Hash.Equals(hash));
+            return DbContext.Links.FirstOrDefault(x => x.Hash.Equals(hash));
         }
     }
 }

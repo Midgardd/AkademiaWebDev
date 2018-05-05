@@ -1,0 +1,26 @@
+.editForm {
+  &__label {
+    display: block;
+    border: solid 1px $color-primary;
+    width: 400px;
+    margin: 4px auto;
+    font-weight: bold;
+    @include border-radius(6px);
+  }
+
+  &__input {
+    outline: none;
+    border: none;
+    padding: 4px 3px;
+    margin-left: 4px;
+    width: 298px;
+    text-align: right;
+  }
+
+  &__desc {
+    padding: 3px;
+    width: 80px;
+    display: inline-block;
+    border-right: solid 1px $color-primary;
+  }
+}

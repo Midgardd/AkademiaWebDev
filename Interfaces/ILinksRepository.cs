@@ -7,6 +7,7 @@ namespace webdev.Interfaces
     public interface ILinksRepository
     {
         IEnumerable<Link> GetLinks(string search,int pageNumber,int pageSize);
+        Link GetLink(string hash);
         void Add(Link information);
         void Delete(String hash);
         void Update(Link link);

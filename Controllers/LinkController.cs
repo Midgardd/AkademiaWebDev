@@ -38,28 +38,60 @@ namespace webdev.Controllers
             return Ok(result);
         }
 
+        [HttpGet("/api/links/{hash}")]
+        public IActionResult Get(string hash)
+        {
+            Link link = _repository.GetLink(hash);
+            if (link == null)
+                return BadRequest();
+
+            return Ok(new LinkGetResult.SendedLinkToClient(link));
+        }
+
+
         [HttpDelete("/api/links")]
-        public IActionResult Delete([FromBody]string hash)
+        public IActionResult Delete([FromQuery]string hash)
         {
             _repository.Delete(hash);
-            return Ok();
+            return Ok(new { message = "Deleted" });
         }
 
         [HttpPost("/api/links")]
-        public IActionResult Create([FromBody]string link)
+        public IActionResult Create([FromBody]CreateLink command)
         {
-            if(!(link.IsValidHttpLink() || link.IsValidHttpsLink()))
+            if(!(command.Link.IsValidHttpLink() || command.Link.IsValidHttpsLink()))
             {
                 return BadRequest();
             }
         
-            Link linkInformation = new Link { OriginalLink = link , Visitors=0};
+            Link linkInformation = new Link { OriginalLink = command.Link , Visitors=0};
             _repository.Add(linkInformation);
 
             linkInformation.Hash = _hashAlgorithm.Hash(linkInformation.Id);
             _repository.Update(linkInformation);
 
-            return Ok();
+            return Ok(new { message = "Created" });
         }
+
+        [HttpPut("/api/links")]
+        public IActionResult Update([FromBody]LinkUpdate update)
+        {
+            if (!(update.Link.IsValidHttpLink() || update.Link.IsValidHttpsLink()))
+            {
+                return BadRequest(new { message = "Not valid link" });
+            }
+
+            
+            Link linkInformation = _repository.GetLinkByHash(update.Hash);
+
+            if (linkInformation == null)
+                return BadRequest(new { message = "Link does not exists" });
+
+            linkInformation.OriginalLink = update.Link;
+            _repository.Update(linkInformation);
+
+            return Ok(new { message="Updated" });
+        }
+
     }
 }
