@@ -5,27 +5,19 @@ import LinksTable from './LinkTable';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 import Icon from 'material-ui/Icon';
+import { CreateLinksLoaded, CreateChangePage } from '../actions/links.actions'
+import { connect } from 'react-redux';
 
-
-class Links extends React.Component {
+class LinksContainer extends React.Component {
     onPageChange = (pageNumber) => {
-        this.fetchLinks(this.state.search, pageNumber);
+        this.props.dispatch(CreateChangePage(pageNumber));
     }
     
-    fetchLinks = (searchedLink='',pageNumber=1) => {
-        let message = {
-            Page: pageNumber,
-            Search: searchedLink,
-        }
-
+    fetchLinks = (Page=1) => {
         UtilsApi
-            .get(CFG_HTTP.URL_LINKS, message)
+            .get(CFG_HTTP.URL_LINKS, { Page })
             .then((returnedData) => {
-                this.setState({
-                    links: returnedData.links,
-                    currentPage: returnedData.pageInformation.currentPage,
-                    pagesLimit: returnedData.pageInformation.maxPage
-                })
+                this.props.dispatch(CreateLinksLoaded(returnedData.links, returnedData.pageInformation.currentPage, returnedData.pageInformation.maxPage));
             })
     }
 
@@ -35,11 +27,11 @@ class Links extends React.Component {
 
     constructor() {
         super();
-        this.state = {
-            links: [],
-            search: '',
-            currentPage: 1,
-            pagesLimit:0
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.state.currentPage !== nextProps.state.currentPage) {
+            this.fetchLinks(nextProps.state.currentPage);
         }
     }
     
@@ -51,10 +43,10 @@ class Links extends React.Component {
                         add
                      </Icon>
                 </Link>
-                <Pagination currentPage={this.state.currentPage}
-                    pagesLimit={this.state.pagesLimit}
+                <Pagination currentPage={this.props.state.currentPage}
+                    maxPage={this.props.state.maxPage}
                     onPageChange={this.onPageChange} />
-                <LinksTable links={this.state.links}
+                <LinksTable links={this.props.state.links}
                     fetchLinks={this.fetchLinks} />
 
             </React.Fragment>
@@ -62,4 +54,11 @@ class Links extends React.Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        state: state.links
+    };
+};
+
+const Links = connect(mapStateToProps)(LinksContainer);
 export default Links;

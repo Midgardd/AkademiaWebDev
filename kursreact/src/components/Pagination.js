@@ -22,7 +22,7 @@ class Pagination extends React.Component {
     };
 
     handleLastPage = () => {
-        this.props.onPageChange(this.props.pagesLimit);
+        this.props.onPageChange(this.props.maxPage);
     };
 
     render() {
@@ -53,19 +53,19 @@ class Pagination extends React.Component {
                             <Grid item
                                 xs={6}
                                 className='tablePagination-desc'>
-                                <Typography>Page {this.props.currentPage} of {this.props.pagesLimit}</Typography>
+                                <Typography>Page {this.props.maxPage} of {this.props.maxPage}</Typography>
                             </Grid>
                             <Grid item
                                 xs={3}
                                 className='tablePagination-next'>
                                 <Button size="small"
                                     onClick={this.handleNext}
-                                    disabled={this.props.currentPage === this.props.pagesLimit}>
+                                    disabled={this.props.currentPage === this.props.maxPage}>
                                     Next <KeyboardArrowRight />
                                 </Button>
                                 <Button size="small"
                                     onClick={this.handleLastPage}
-                                    disabled={this.props.currentPage === this.props.pagesLimit}>
+                                    disabled={this.props.currentPage === this.props.maxPage}>
                                     <Icon>last_page</Icon>
                                 </Button>
                             </Grid>
@@ -80,7 +80,7 @@ class Pagination extends React.Component {
 Pagination.propTypes = {
     onPageChange: PropTypes.func.isRequired,
     currentPage: PropTypes.number.isRequired,
-    pagesLimit: PropTypes.number.isRequired,
+    maxPage: PropTypes.number.isRequired,
 };
 
 export default Pagination;
